@@ -995,7 +995,7 @@ extract_bucket(Node) ->
 -spec put_object(string(), string(), iodata()) -> proplist().
 
 put_object(BucketName, Key, Value) ->
-    put_object(BucketName, Key, Value, []).
+    put_object(BucketName, Key, Value, get(aws_config)).
 
 -spec put_object(string(), string(), iodata(), proplist() | aws_config()) -> proplist().
 
