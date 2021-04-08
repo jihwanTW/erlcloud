@@ -952,18 +952,10 @@ get_credentials_from_task_metadata(Config) ->
     end.
 
 get_credentials_from_metadata_xform( Creds ) ->
-  Expiration = case
-                 is_map(Creds)
-               of
-                 true->
-                   maps:get(<<"Expiration">>,Creds);
-                 false->
-                   proplists:get_value(<<"Expiration">>, Creds)
-               end,
     case {prop_to_list_defined(<<"AccessKeyId">>, Creds),
           prop_to_list_defined(<<"SecretAccessKey">>, Creds),
           prop_to_list_defined(<<"Token">>, Creds),
-          timestamp_to_gregorian_seconds(Expiration)} of
+          timestamp_to_gregorian_seconds(proplists:get_value(<<"Expiration">>, Creds))} of
         {Id, Key, Token, GregorianExpire} when is_list(Id), is_list(Key),
                                                is_list(Token),
                                                is_integer(GregorianExpire) ->
@@ -976,11 +968,6 @@ get_credentials_from_metadata_xform( Creds ) ->
         _ -> {error, metadata_not_available}
     end.
 
-prop_to_list_defined( Name, Props ) when is_map(Props) ->
-  case maps:get( Name, Props ) of
-    undefined -> undefined;
-    Value when is_binary(Value) -> binary_to_list(Value)
-  end;
 prop_to_list_defined( Name, Props ) ->
     case proplists:get_value( Name, Props ) of
         undefined -> undefined;
