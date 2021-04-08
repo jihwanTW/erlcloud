@@ -969,6 +969,11 @@ get_credentials_from_metadata_xform( Creds ) ->
         _ -> {error, metadata_not_available}
     end.
 
+prop_to_list_defined( Name, Props ) when is_map(Props) ->
+  case maps:get( Name, Props ) of
+    undefined -> undefined;
+    Value when is_binary(Value) -> binary_to_list(Value)
+  end;
 prop_to_list_defined( Name, Props ) ->
     case proplists:get_value( Name, Props ) of
         undefined -> undefined;
